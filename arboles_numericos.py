@@ -13,6 +13,7 @@ __date__ = "enero 2025"
 
 import math
 from collections import Counter
+import random
 
 def entrena_arbol(datos, target, clase_default, 
                   max_profundidad=None, acc_nodo=1.0, min_ejemplos=0,
@@ -48,6 +49,16 @@ def entrena_arbol(datos, target, clase_default,
     atributos = list(datos[0].keys())
     atributos.remove(target)
         
+    # Si se especificaron variables seleccionadas
+    if variables_seleccionadas is not None:
+        # Si es un entero, aleatoriamente seleccionamos ese numero de variables
+        if isinstance(variables_seleccionadas, int):
+            num_atributos = min(variables_seleccionadas, len(atributos))
+            atributos = random.sample(atributos, num_atributos)
+        # Si es una lista, usamos solo esas variables
+        else:
+            atributos = [atri for atri in variables_seleccionadas if atri in atributos]
+
     # Criterios para deterinar si es un nodo hoja
     if  len(datos) == 0 or len(atributos) == 0:
         return NodoN(terminal=True, clase_default=clase_default)
