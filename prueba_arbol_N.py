@@ -37,6 +37,7 @@ atributos = [target] + [f'feature_{i}' for i in range(1, 31)]
 random.seed(42)
 random.shuffle(datos)
 N = int(0.8*len(datos))
+print(N)
 datos_entrenamiento = datos[:N]
 datos_validacion = datos[N:]
 

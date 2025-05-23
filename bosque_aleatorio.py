@@ -1,3 +1,6 @@
+__author__ = "Francisco Del Castillo"
+__date__ = "mayo 2025"
+
 from collections import Counter
 from arboles_numericos import entrena_arbol, NodoN
 import random
@@ -35,17 +38,25 @@ def entrena_bosque_aleatorio(datos, target, clase_default,
     bosque: list(Nodo)
         Una lista con los nodos raiz de cada árbol en el bosque
     """
-
+    
     atributos = list(datos[0].keys())
     atributos.remove(target)
     num_variables = max(1, int(len(atributos) * porcentaje_variables))
     
     bosque = []
+    i = 0
     
     for _ in range(num_arboles):
         # Creamos un subset de datos con muestreo con reemplazo 
         indices = random.choices(range(len(datos)), k=len(datos))
         subset_datos = [datos[i] for i in indices]
+
+        print(f"Árbol {i+1}: {len(subset_datos)} ejemplos")
+        i += 1
+
+        if not subset_datos:
+            print("Skipping tree: empty subset_datos 😭")
+            continue
         
         # Entrenamos un arbol con ese subset de datos
         # y con un número limitado de variables en cada nodo
@@ -58,7 +69,6 @@ def entrena_bosque_aleatorio(datos, target, clase_default,
             min_ejemplos=min_ejemplos,
             variables_seleccionadas=num_variables  # Usamos el entero para selección aleatoria
         )
-        
         bosque.append(arbol)
     
     return bosque
@@ -75,7 +85,9 @@ def predice_instancia_arbol(arbol, instancia):
 
 def predice_bosque(bosque, instancia): 
     # Obtenemos las predicciones de cada arbol
-    predicciones = [predice_instancia_arbol(arbol, instancia) for arbol in bosque]
+    predicciones = [
+        predice_instancia_arbol(arbol, instancia)
+          for arbol in bosque]
     
     # Votación mayoritaria
     contador = Counter(predicciones)
